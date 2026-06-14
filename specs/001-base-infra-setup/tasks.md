@@ -29,9 +29,9 @@ Single Next.js project — all application code under `src/`, config files at re
 
 **Purpose**: Bootstrap the Next.js 14 App Router project and initialize the design system CLI.
 
-- [ ] T001 Bootstrap Next.js 14 project by running `npx create-next-app@latest . --typescript --tailwind --app --src-dir --no-git` in the repository root (creates `src/`, `tsconfig.json`, `tailwind.config.ts`, `next.config.ts`, and `package.json`)
-- [ ] T002 Initialize shadcn/ui by running `npx shadcn@latest init` — select `default` style, CSS variables mode, and `src/components/ui` as the component output path (creates `components.json` and `src/lib/utils.ts`)
-- [ ] T003 [P] Create `.env.example` at repository root listing all 7 required variable names with placeholder comments: `NEXTAUTH_SECRET`, `NEXTAUTH_URL`, `DATABASE_URL`, `DIRECT_URL`, `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`
+- [X] T001 Bootstrap Next.js 14 project by running `npx create-next-app@latest . --typescript --tailwind --app --src-dir --no-git` in the repository root (creates `src/`, `tsconfig.json`, `tailwind.config.ts`, `next.config.ts`, and `package.json`)
+- [X] T002 Initialize shadcn/ui by running `npx shadcn@latest init` — select `default` style, CSS variables mode, and `src/components/ui` as the component output path (creates `components.json` and `src/lib/utils.ts`)
+- [X] T003 [P] Create `.env.example` at repository root listing all 7 required variable names with placeholder comments: `NEXTAUTH_SECRET`, `NEXTAUTH_URL`, `DATABASE_URL`, `DIRECT_URL`, `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`
 
 ---
 
@@ -41,11 +41,11 @@ Single Next.js project — all application code under `src/`, config files at re
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete.
 
-- [ ] T004 Create `src/lib/env.ts` — Zod schema parsing `process.env` for all 7 required variables (strings with `min(1)`, URL fields with `.url()`); `export const env = schema.parse(process.env)` so import-time failure names the missing variable (satisfies env-contract.md)
-- [ ] T005 Write `prisma/schema.prisma` with `generator client { provider = "prisma-client-js" }` and `datasource db { provider = "postgresql"; url = env("DATABASE_URL"); directUrl = env("DIRECT_URL") }` — no models (empty schema by design, data-model.md)
-- [ ] T006 [P] Create `src/lib/prisma.ts` — export singleton `PrismaClient` stored on `globalThis` to survive Next.js hot-module reloads in development (research.md §3 pattern)
-- [ ] T007 [P] Create `src/lib/supabase/client.ts` — browser-safe `createBrowserClient` factory using `env.NEXT_PUBLIC_SUPABASE_URL` and `env.NEXT_PUBLIC_SUPABASE_ANON_KEY` (research.md §8)
-- [ ] T008 [P] Create `src/lib/supabase/server.ts` — server-only `createServerClient` factory using `env.SUPABASE_SERVICE_ROLE_KEY`; file must never be imported from client components (research.md §8)
+- [X] T004 Create `src/lib/env.ts` — Zod schema parsing `process.env` for all 7 required variables (strings with `min(1)`, URL fields with `.url()`); `export const env = schema.parse(process.env)` so import-time failure names the missing variable (satisfies env-contract.md)
+- [X] T005 Write `prisma/schema.prisma` with `generator client { provider = "prisma-client-js" }` and `datasource db { provider = "postgresql"; url = env("DATABASE_URL"); directUrl = env("DIRECT_URL") }` — no models (empty schema by design, data-model.md)
+- [X] T006 [P] Create `src/lib/prisma.ts` — export singleton `PrismaClient` stored on `globalThis` to survive Next.js hot-module reloads in development (research.md §3 pattern)
+- [X] T007 [P] Create `src/lib/supabase/client.ts` — browser-safe `createBrowserClient` factory using `env.NEXT_PUBLIC_SUPABASE_URL` and `env.NEXT_PUBLIC_SUPABASE_ANON_KEY` (research.md §8)
+- [X] T008 [P] Create `src/lib/supabase/server.ts` — server-only `createServerClient` factory using `env.SUPABASE_SERVICE_ROLE_KEY`; file must never be imported from client components (research.md §8)
 - [ ] T009 Run `npx prisma migrate dev --name init` using `DIRECT_URL` (port 5432) to create the empty baseline migration under `prisma/migrations/`; commit the generated migration file
 
 **Checkpoint**: Foundation ready — env validation, DB schema, Prisma client, and Supabase clients all in place.
@@ -60,12 +60,12 @@ Single Next.js project — all application code under `src/`, config files at re
 
 ### Implementation for User Story 1
 
-- [ ] T010 [P] [US1] Define brand color CSS custom properties and Tailwind directives in `src/app/globals.css` — add all 9 brand tokens from Constitution (`--brand-primary: #1A1A2E`, `--brand-accent: #E85D04`, `--brand-warm: #F7F3EE`, `--brand-surface: #FFFFFF`, `--brand-muted: #6B7280`, `--brand-border: #E5E7EB`, `--status-success: #16A34A`, `--status-warning: #D97706`, `--status-danger: #DC2626`)
-- [ ] T011 [P] [US1] Extend `tailwind.config.ts` — add `colors` extension mapping brand token names to CSS variable references (`brand-primary: 'var(--brand-primary)'`, etc.) and `fontFamily` extension mapping `display: ['var(--font-display)', 'serif']` and `body: ['var(--font-body)', 'sans-serif']` (research.md §9)
-- [ ] T012 [US1] Import `Inter` and `Playfair_Display` from `next/font/google` with `variable: '--font-body'` / `variable: '--font-display'` and `display: 'swap'` in `src/app/layout.tsx`; apply both `className` values to the `<html>` element (research.md §5)
-- [ ] T013 [P] [US1] Create `src/app/(marketing)/page.tsx` — RSC placeholder with an `<h1>` using `className="font-display"` and a `<p>` using `className="font-body"` to demonstrate brand typography on the public route
-- [ ] T014 [P] [US1] Create `src/app/(dashboard)/dashboard/page.tsx` — RSC placeholder page confirming the protected route resolves (no business logic; just a heading and `"use server"` is NOT needed — this is a Server Component by default)
-- [ ] T015 [US1] Create `middleware.ts` at repository root with `export function middleware(request: NextRequest) { return NextResponse.next() }` and `export const config = { matcher: ['/dashboard/:path*', '/onboarding'] }` (research.md §7, FR-003)
+- [X] T010 [P] [US1] Define brand color CSS custom properties and Tailwind directives in `src/app/globals.css` — add all 9 brand tokens from Constitution (`--brand-primary: #1A1A2E`, `--brand-accent: #E85D04`, `--brand-warm: #F7F3EE`, `--brand-surface: #FFFFFF`, `--brand-muted: #6B7280`, `--brand-border: #E5E7EB`, `--status-success: #16A34A`, `--status-warning: #D97706`, `--status-danger: #DC2626`)
+- [X] T011 [P] [US1] Extend `tailwind.config.ts` — add `colors` extension mapping brand token names to CSS variable references (`brand-primary: 'var(--brand-primary)'`, etc.) and `fontFamily` extension mapping `display: ['var(--font-display)', 'serif']` and `body: ['var(--font-body)', 'sans-serif']` (research.md §9)
+- [X] T012 [US1] Import `Inter` and `Playfair_Display` from `next/font/google` with `variable: '--font-body'` / `variable: '--font-display'` and `display: 'swap'` in `src/app/layout.tsx`; apply both `className` values to the `<html>` element (research.md §5)
+- [X] T013 [P] [US1] Create `src/app/(marketing)/page.tsx` — RSC placeholder with an `<h1>` using `className="font-display"` and a `<p>` using `className="font-body"` to demonstrate brand typography on the public route
+- [X] T014 [P] [US1] Create `src/app/(dashboard)/dashboard/page.tsx` — RSC placeholder page confirming the protected route resolves (no business logic; just a heading and `"use server"` is NOT needed — this is a Server Component by default)
+- [X] T015 [US1] Create `middleware.ts` at repository root with `export function middleware(request: NextRequest) { return NextResponse.next() }` and `export const config = { matcher: ['/dashboard/:path*', '/onboarding'] }` (research.md §7, FR-003)
 
 **Checkpoint**: `npm run dev` starts cleanly; `http://localhost:3000` renders with brand fonts; `/dashboard` is accessible; removing any env var produces a named ZodError before "Ready".
 
@@ -95,10 +95,10 @@ Single Next.js project — all application code under `src/`, config files at re
 
 ### Implementation for User Story 3
 
-- [ ] T019 [P] [US3] Add core shadcn/ui components by running `npx shadcn@latest add button card input` — generates `src/components/ui/button.tsx`, `src/components/ui/card.tsx`, `src/components/ui/input.tsx` with brand CSS variable theming
-- [ ] T020 [P] [US3] Create `src/types/api.ts` — export `ApiResponse<T>` discriminated union (`{ sucesso: true; dados: T } | { sucesso: false; erro: string; codigo?: string }`) and factory helpers `ok<T>()` / `erro()` per api-response.md contract
-- [ ] T021 [P] [US3] Create `src/lib/auth/ownership.ts` — export stub `verificarOwnership` function (throws `new Error('Not implemented')`) as placeholder for the auth feature; establishes the import path required by Constitution Principle III
-- [ ] T022 [US3] Run `npx tsc --noEmit` and confirm zero TypeScript errors across all files in `src/` — no `any`, no `as unknown`, all Zod-inferred types propagate correctly (FR-008, SC-005)
+- [X] T019 [P] [US3] Add core shadcn/ui components by running `npx shadcn@latest add button card input` — generates `src/components/ui/button.tsx`, `src/components/ui/card.tsx`, `src/components/ui/input.tsx` with brand CSS variable theming
+- [X] T020 [P] [US3] Create `src/types/api.ts` — export `ApiResponse<T>` discriminated union (`{ sucesso: true; dados: T } | { sucesso: false; erro: string; codigo?: string }`) and factory helpers `ok<T>()` / `erro()` per api-response.md contract
+- [X] T021 [P] [US3] Create `src/lib/auth/ownership.ts` — export stub `verificarOwnership` function (throws `new Error('Not implemented')`) as placeholder for the auth feature; establishes the import path required by Constitution Principle III
+- [X] T022 [US3] Run `npx tsc --noEmit` and confirm zero TypeScript errors across all files in `src/` — no `any`, no `as unknown`, all Zod-inferred types propagate correctly (FR-008, SC-005)
 
 **Checkpoint**: Design system components importable, `ApiResponse<T>` standardised, ownership stub in place, TypeScript strict build green.
 
