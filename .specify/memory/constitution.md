@@ -1,17 +1,18 @@
 <!--
 SYNC IMPACT REPORT
 ==================
-Version change: 1.1.0 → 1.2.0
-Modified principles: none
-Added sections:
-  - Padrões Obrigatórios: Frontend Design Plugin (novo padrão de ferramenta de desenvolvimento)
-  - Antipadrões Proibidos: #9 — Layout sem o plugin frontend-design
+Version change: 1.3.0 → 1.4.0
+Modified sections:
+  - Padrões Obrigatórios: adicionado padrão "Progresso de Tasks"
+Added sections: none
 Removed sections: none
 Templates requiring updates:
-  ✅ plan-template.md — sem alterações necessárias (Constitution Check é derivado do estado atual)
+  ✅ plan-template.md — sem alterações necessárias
   ✅ spec-template.md — sem alterações necessárias
-  ✅ tasks-template.md — sem alterações necessárias
-Follow-up TODOs: none
+  ✅ tasks-template.md — Notes atualizado para reforçar marcação imediata de task concluída
+Follow-up TODOs:
+  - Avaliar migração de next-auth v4 → v5 (Auth.js) para compatibilidade nativa com Next.js 16
+  - middleware.ts está deprecated no Next.js 16 (renomear para proxy.ts quando next-auth v5 for adotado)
 -->
 
 # Cardê Constitution
@@ -19,6 +20,8 @@ Follow-up TODOs: none
 ## O que é o Cardê
 
 Cardê é um SaaS de cardápio digital para restaurantes. O restaurante cadastra seus pratos, gera um QR code e coloca na mesa — o cliente escaneia e vê o cardápio direto no celular, sem baixar nenhum aplicativo. Proposta de valor: cardápio bonito no ar em menos de uma hora, sem precisar de agência, programador ou designer.
+
+**Stack principal:** Next.js 16 (Turbopack), React 18, Prisma 5, Supabase (PostgreSQL), next-auth v4, Tailwind CSS 3, TypeScript 5.
 
 **Público primário:** pequenos restaurantes e lanchonetes com 1 a 3 funcionários na gestão, sem time técnico interno, que sentem dor ao reimprimir cardápios por mudança de preço e querem parecer mais profissionais sem gastar muito.
 
@@ -38,7 +41,7 @@ Server Components são o padrão. `'use client'` é adicionado apenas quando est
 
 ### III. Segurança em Todas as Camadas
 
-Toda API route valida o corpo da requisição com Zod antes de qualquer operação — nunca confiar no cliente. Toda mutação (PUT, PATCH, DELETE) chama `verificarOwnership()` centralizado em `lib/auth/ownership.ts` — sem verificações ad-hoc por route e sem duplicação de lógica. Uploads são validados no cliente (feedback rápido de UX) e no servidor (garantia real) — nunca apenas em um lado. Variáveis de ambiente são acessadas exclusivamente via `lib/env.ts`, que lança erro explícito na inicialização se alguma estiver ausente. Proteção de rotas vive exclusivamente em `middleware.ts` — nunca nas páginas.
+Toda API route valida o corpo da requisição com Zod antes de qualquer operação — nunca confiar no cliente. Toda mutação (PUT, PATCH, DELETE) chama `verificarOwnership()` centralizado em `lib/auth/ownership.ts` — sem verificações ad-hoc por route e sem duplicação de lógica. Uploads são validados no cliente (feedback rápido de UX) e no servidor (garantia real) — nunca apenas em um lado. Variáveis de ambiente são acessadas exclusivamente via `lib/env.ts`, que lança erro explícito na inicialização se alguma estiver ausente. Proteção de rotas vive exclusivamente em `middleware.ts` — nunca nas páginas. No Next.js 16, `middleware.ts` está deprecated em favor de `proxy.ts`, mas é mantido enquanto next-auth v4 for usado (next-auth v4 requer edge runtime, incompatível com `proxy.ts`).
 
 ### IV. Todos os Estados da UI São Tratados
 
@@ -112,10 +115,12 @@ Fora do escopo do MVP: pedidos pelo QR, integração com WhatsApp, disponibilida
 
 **Frontend Design Plugin:** Todo desenvolvimento de layout, componente visual ou página MUST usar o skill `/frontend-design` (plugin `frontend-design:frontend-design`) antes de implementar. O plugin gera interfaces distintivas e de qualidade de produção alinhadas à identidade visual do Cardê. A ordem correta é: invocar `/frontend-design` para gerar o design → implementar o código resultante. Nunca implementar layout sem passar pelo plugin primeiro.
 
+**Progresso de Tasks:** Ao concluir cada task, marcar imediatamente como `[x]` no `tasks.md` da spec correspondente antes de iniciar a próxima. Nunca avançar para a task seguinte com tasks anteriores não marcadas. A marcação é o único sinal de que a task foi concluída — task não marcada equivale a task não feita.
+
 ---
 
 ## Governance
 
 Esta constitution tem precedência sobre todas as outras práticas. Os 5 princípios e os 9 antipadrões são inegociáveis — não apenas orientações. Todo código novo deve satisfazer os princípios I–V antes de ser considerado completo. Qualquer feature além do escopo do MVP exige alinhamento explícito com o roadmap de Fases 2 e 3. Complexidade adicional deve ser justificada — o padrão é a solução mais simples que resolve o problema real.
 
-**Version**: 1.2.0 | **Ratified**: 2026-06-13 | **Last Amended**: 2026-06-14
+**Version**: 1.4.0 | **Ratified**: 2026-06-13 | **Last Amended**: 2026-06-15
