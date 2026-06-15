@@ -1,3 +1,19 @@
+<!--
+SYNC IMPACT REPORT
+==================
+Version change: 1.1.0 → 1.2.0
+Modified principles: none
+Added sections:
+  - Padrões Obrigatórios: Frontend Design Plugin (novo padrão de ferramenta de desenvolvimento)
+  - Antipadrões Proibidos: #9 — Layout sem o plugin frontend-design
+Removed sections: none
+Templates requiring updates:
+  ✅ plan-template.md — sem alterações necessárias (Constitution Check é derivado do estado atual)
+  ✅ spec-template.md — sem alterações necessárias
+  ✅ tasks-template.md — sem alterações necessárias
+Follow-up TODOs: none
+-->
+
 # Cardê Constitution
 
 ## O que é o Cardê
@@ -94,10 +110,12 @@ Fora do escopo do MVP: pedidos pelo QR, integração com WhatsApp, disponibilida
 
 **TypeScript:** sem `any`, sem `as unknown`. Tipos de resposta de API sempre explícitos.
 
+**Frontend Design Plugin:** Todo desenvolvimento de layout, componente visual ou página MUST usar o skill `/frontend-design` (plugin `frontend-design:frontend-design`) antes de implementar. O plugin gera interfaces distintivas e de qualidade de produção alinhadas à identidade visual do Cardê. A ordem correta é: invocar `/frontend-design` para gerar o design → implementar o código resultante. Nunca implementar layout sem passar pelo plugin primeiro.
+
 ---
 
 ## Governance
 
-Esta constitution tem precedência sobre todas as outras práticas. Os 5 princípios e os 8 antipadrões são inegociáveis — não apenas orientações. Todo código novo deve satisfazer os princípios I–V antes de ser considerado completo. Qualquer feature além do escopo do MVP exige alinhamento explícito com o roadmap de Fases 2 e 3. Complexidade adicional deve ser justificada — o padrão é a solução mais simples que resolve o problema real.
+Esta constitution tem precedência sobre todas as outras práticas. Os 5 princípios e os 9 antipadrões são inegociáveis — não apenas orientações. Todo código novo deve satisfazer os princípios I–V antes de ser considerado completo. Qualquer feature além do escopo do MVP exige alinhamento explícito com o roadmap de Fases 2 e 3. Complexidade adicional deve ser justificada — o padrão é a solução mais simples que resolve o problema real.
 
-**Version**: 1.1.0 | **Ratified**: 2026-06-13 | **Last Amended**: 2026-06-13
+**Version**: 1.2.0 | **Ratified**: 2026-06-13 | **Last Amended**: 2026-06-14
