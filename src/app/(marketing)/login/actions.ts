@@ -27,7 +27,7 @@ export async function requestMagicLink(input: unknown): Promise<Result> {
   }
 
   const baseUrl = process.env.NEXTAUTH_URL ?? 'http://localhost:3000'
-  const cookie = headers().get('cookie') ?? ''
+  const cookie = (await headers()).get('cookie') ?? ''
 
   try {
     const csrfRes = await fetch(`${baseUrl}/api/auth/csrf`, { headers: { cookie } })
