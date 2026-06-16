@@ -35,9 +35,16 @@ export const authConfig: NextAuthOptions = {
     signIn: '/login',
   },
   callbacks: {
-    async jwt({ token, user }): Promise<import('next-auth/jwt').JWT> {
+    async jwt({ token, user, trigger }): Promise<import('next-auth/jwt').JWT> {
       if (user) {
         token.id = user.id
+      }
+      if ((user || trigger === 'update') && token.id) {
+        const restaurante = await prisma.restaurante.findUnique({
+          where: { donoId: token.id },
+          select: { id: true },
+        })
+        token.restauranteId = restaurante?.id ?? null
       }
       return token
     },
