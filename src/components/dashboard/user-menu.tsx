@@ -24,9 +24,7 @@ function getInitials(name: string | null | undefined, email: string | null | und
     }
     return parts[0][0].toUpperCase()
   }
-  if (email) {
-    return email[0].toUpperCase()
-  }
+  if (email) return email[0].toUpperCase()
   return '?'
 }
 
@@ -37,24 +35,34 @@ export function UserMenu({ email, name }: UserMenuProps) {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <button
-          className="flex h-11 w-11 items-center justify-center rounded-full bg-brand-accent text-white font-semibold text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
+          className="flex h-9 w-9 items-center justify-center rounded-full text-white font-semibold text-sm ring-2 ring-white/20 transition-all duration-200 hover:ring-[#E85D04]/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#E85D04]"
+          style={{ background: 'linear-gradient(135deg, #E85D04 0%, #c44d03 100%)' }}
           aria-label="Menu do usuário"
         >
           {initials}
         </button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-56">
+      <DropdownMenuContent
+        align="end"
+        className="w-56 border-0"
+        style={{
+          background: '#1f1f3a',
+          boxShadow: '0 8px 32px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.08)',
+        }}
+      >
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
-            {name && <p className="text-sm font-medium leading-none">{name}</p>}
+            {name && (
+              <p className="text-sm font-medium leading-none text-white">{name}</p>
+            )}
             {email && (
-              <p className="text-xs leading-none text-muted-foreground">{email}</p>
+              <p className="text-xs leading-none text-white/40">{email}</p>
             )}
           </div>
         </DropdownMenuLabel>
-        <DropdownMenuSeparator />
+        <DropdownMenuSeparator style={{ background: 'rgba(255,255,255,0.08)' }} />
         <DropdownMenuItem
-          className="cursor-pointer text-status-danger focus:text-status-danger min-h-[44px]"
+          className="cursor-pointer min-h-[44px] text-red-400 focus:text-red-300 focus:bg-white/5"
           onSelect={() => signOut({ callbackUrl: '/login' })}
         >
           Sair
