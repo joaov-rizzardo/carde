@@ -1,3 +1,20 @@
+<!--
+## Sync Impact Report
+
+- **Version change**: 1.4.0 → 1.5.0 (MINOR — new mandatory pattern + antipadrão added)
+- **Modified principles**: none renamed
+- **Added sections**: none
+- **Added content**:
+  - Padrões Obrigatórios: "Layout e Interfaces" — mandates `/frontend-design` skill before any UI layout code
+  - Antipadrões Proibidos: #9 — layout without `/frontend-design`
+- **Removed sections**: none
+- **Templates requiring updates**:
+  - `.specify/templates/plan-template.md` ✅ no update needed
+  - `.specify/templates/spec-template.md` ✅ no update needed
+  - `.specify/templates/tasks-template.md` ✅ no update needed
+- **Follow-up TODOs**: none
+-->
+
 # Cardê Constitution
 
 ## O que é o Cardê
@@ -84,6 +101,8 @@ Fora do escopo do MVP: pedidos pelo QR, integração com WhatsApp, disponibilida
 
 **8. Queries N+1 no Prisma.** Buscar categorias e depois itens de cada categoria em loop separado. Usar sempre `include` para trazer relações em uma única query.
 
+**9. Layout implementado sem `/frontend-design`.** Escrever componentes de UI diretamente sem acionar o skill `/frontend-design` gera interfaces genéricas, inconsistentes com a identidade visual do Cardê e de qualidade inferior. Todo layout novo ou redesign visual passa obrigatoriamente pelo `/frontend-design` antes de qualquer código.
+
 ---
 
 ## Padrões Obrigatórios
@@ -96,6 +115,8 @@ Fora do escopo do MVP: pedidos pelo QR, integração com WhatsApp, disponibilida
 
 **TypeScript:** sem `any`, sem `as unknown`. Tipos de resposta de API sempre explícitos.
 
+**Layout e Interfaces:** Todo layout novo ou redesign de componente visual existente aciona obrigatoriamente o skill `/frontend-design` antes de escrever código. Isso garante design de produção com identidade visual consistente, evitando aparência genérica. Nenhum componente de UI com impacto visual significativo é implementado sem passar pelo `/frontend-design` primeiro.
+
 **Progresso de Tasks:** Ao concluir cada task, marcar imediatamente como `[x]` no `tasks.md` da spec correspondente antes de iniciar a próxima. Nunca avançar para a task seguinte com tasks anteriores não marcadas. A marcação é o único sinal de que a task foi concluída — task não marcada equivale a task não feita.
 
 ---
@@ -104,4 +125,4 @@ Fora do escopo do MVP: pedidos pelo QR, integração com WhatsApp, disponibilida
 
 Esta constitution tem precedência sobre todas as outras práticas. Os 5 princípios e os 9 antipadrões são inegociáveis — não apenas orientações. Todo código novo deve satisfazer os princípios I–V antes de ser considerado completo. Qualquer feature além do escopo do MVP exige alinhamento explícito com o roadmap de Fases 2 e 3. Complexidade adicional deve ser justificada — o padrão é a solução mais simples que resolve o problema real.
 
-**Version**: 1.4.0 | **Ratified**: 2026-06-13 | **Last Amended**: 2026-06-15
+**Version**: 1.5.0 | **Ratified**: 2026-06-13 | **Last Amended**: 2026-06-15
