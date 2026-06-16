@@ -9,31 +9,51 @@ datasource db {
 }
 
 model User {
-  id              String    @id @default(cuid())
+  id              String       @id @default(cuid())
   name            String?
-  email           String    @unique
+  email           String       @unique
   emailVerified   DateTime?
   image           String?
-  termosAceitos   Boolean   @default(false)
+  termosAceitos   Boolean      @default(false)
   termosAceitosEm DateTime?
-  criadoEm        DateTime  @default(now())
-  atualizadoEm    DateTime  @updatedAt
+  criadoEm        DateTime     @default(now())
+  atualizadoEm    DateTime     @updatedAt
   accounts        Account[]
   restaurante     Restaurante?
 }
 
 model Restaurante {
-  id           String   @id @default(cuid())
-  slug         String   @unique
+  id           String      @id @default(cuid())
+  slug         String      @unique
   nome         String
   descricao    String?
-  corPrimaria  String   @default("#E85D04")
+  corPrimaria  String      @default("#E85D04")
   logoUrl      String?
-  ativo        Boolean  @default(true)
-  donoId       String   @unique
-  dono         User     @relation(fields: [donoId], references: [id])
-  criadoEm     DateTime @default(now())
-  atualizadoEm DateTime @updatedAt
+  ativo        Boolean     @default(true)
+  donoId       String      @unique
+  criadoEm     DateTime    @default(now())
+  atualizadoEm DateTime    @updatedAt
+  categorias   Categoria[]
+  dono         User        @relation(fields: [donoId], references: [id])
+}
+
+model Categoria {
+  id            String      @id @default(cuid())
+  nome          String
+  ordem         Int         @default(0)
+  restauranteId String
+  restaurante   Restaurante @relation(fields: [restauranteId], references: [id], onDelete: Cascade)
+  itens         Item[]
+
+  @@index([restauranteId])
+}
+
+model Item {
+  id          String    @id @default(cuid())
+  categoriaId String
+  categoria   Categoria @relation(fields: [categoriaId], references: [id])
+
+  @@index([categoriaId])
 }
 
 model Account {

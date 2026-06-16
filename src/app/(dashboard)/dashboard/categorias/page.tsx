@@ -1,13 +1,32 @@
-export default function CategoriasPage() {
+import { redirect } from 'next/navigation'
+import { prisma } from '@/lib/prisma'
+import { obterRestauranteDaSessao } from '@/lib/auth/ownership'
+import { CategoriaList } from '@/components/categorias/categoria-list'
+import type { CategoriaDto } from '@/types/categoria'
+
+export default async function CategoriasPage() {
+  let restauranteId: string
+  try {
+    const r = await obterRestauranteDaSessao()
+    restauranteId = r.id
+  } catch {
+    redirect('/login')
+  }
+
+  const categorias: CategoriaDto[] = await prisma.categoria.findMany({
+    where: { restauranteId },
+    orderBy: { ordem: 'asc' },
+    select: { id: true, nome: true, ordem: true },
+  })
+
   return (
-    <div className="min-h-full p-6 md:p-10" style={{ background: '#F7F3EE' }}>
-      <h1
-        className="font-display text-3xl font-semibold mb-2"
-        style={{ color: '#1A1A2E' }}
-      >
+    <div className="min-h-full bg-brand-warm p-6 md:p-10">
+      <h1 className="font-display text-3xl font-semibold text-brand-primary mb-10">
         Categorias
       </h1>
-      <p style={{ color: '#6B7280' }}>Em breve — Etapa 5</p>
+      <div className="max-w-2xl">
+        <CategoriaList inicialCategorias={categorias} />
+      </div>
     </div>
   )
 }
