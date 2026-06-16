@@ -1,20 +1,3 @@
-<!--
-SYNC IMPACT REPORT
-==================
-Version change: 1.3.0 → 1.4.0
-Modified sections:
-  - Padrões Obrigatórios: adicionado padrão "Progresso de Tasks"
-Added sections: none
-Removed sections: none
-Templates requiring updates:
-  ✅ plan-template.md — sem alterações necessárias
-  ✅ spec-template.md — sem alterações necessárias
-  ✅ tasks-template.md — Notes atualizado para reforçar marcação imediata de task concluída
-Follow-up TODOs:
-  - Avaliar migração de next-auth v4 → v5 (Auth.js) para compatibilidade nativa com Next.js 16
-  - middleware.ts está deprecated no Next.js 16 (renomear para proxy.ts quando next-auth v5 for adotado)
--->
-
 # Cardê Constitution
 
 ## O que é o Cardê
@@ -112,8 +95,6 @@ Fora do escopo do MVP: pedidos pelo QR, integração com WhatsApp, disponibilida
 **Slugs:** geração exclusivamente via `gerarSlugUnico()` em `lib/restaurante/slug.ts` — normaliza acentos, remove caracteres especiais, trata colisões com sufixo numérico automático.
 
 **TypeScript:** sem `any`, sem `as unknown`. Tipos de resposta de API sempre explícitos.
-
-**Frontend Design Plugin:** Todo desenvolvimento de layout, componente visual ou página MUST usar o skill `/frontend-design` (plugin `frontend-design:frontend-design`) antes de implementar. O plugin gera interfaces distintivas e de qualidade de produção alinhadas à identidade visual do Cardê. A ordem correta é: invocar `/frontend-design` para gerar o design → implementar o código resultante. Nunca implementar layout sem passar pelo plugin primeiro.
 
 **Progresso de Tasks:** Ao concluir cada task, marcar imediatamente como `[x]` no `tasks.md` da spec correspondente antes de iniciar a próxima. Nunca avançar para a task seguinte com tasks anteriores não marcadas. A marcação é o único sinal de que a task foi concluída — task não marcada equivale a task não feita.
 
