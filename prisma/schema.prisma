@@ -19,6 +19,21 @@ model User {
   criadoEm        DateTime  @default(now())
   atualizadoEm    DateTime  @updatedAt
   accounts        Account[]
+  restaurante     Restaurante?
+}
+
+model Restaurante {
+  id           String   @id @default(cuid())
+  slug         String   @unique
+  nome         String
+  descricao    String?
+  corPrimaria  String   @default("#E85D04")
+  logoUrl      String?
+  ativo        Boolean  @default(true)
+  donoId       String   @unique
+  dono         User     @relation(fields: [donoId], references: [id])
+  criadoEm     DateTime @default(now())
+  atualizadoEm DateTime @updatedAt
 }
 
 model Account {
