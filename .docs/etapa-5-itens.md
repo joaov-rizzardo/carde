@@ -10,6 +10,7 @@ Núcleo do produto. CRUD completo de pratos/itens do cardápio com todos os camp
 - Toggle de disponível/pausado por item (sem precisar excluir)
 - Estado vazio com CTA quando não há itens
 - API REST com autorização por restaurante
+- Deve poder cadastrar nome ( obrigatório ), preço ( obrigatório ), descrição ( opcional ), foto ( opcional será implementado mais tarde ), categoria
 
 ---
 

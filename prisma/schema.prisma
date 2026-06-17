@@ -50,6 +50,13 @@ model Categoria {
 
 model Item {
   id          String    @id @default(cuid())
+  nome        String
+  preco       Decimal   @db.Decimal(10, 2)
+  descricao   String?
+  fotoUrl     String?
+  disponivel  Boolean   @default(true)
+  destaque    Boolean   @default(false)
+  ordem       Int       @default(0)
   categoriaId String
   categoria   Categoria @relation(fields: [categoriaId], references: [id])
 

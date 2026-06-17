@@ -24,9 +24,7 @@ export default async function CategoriasPage() {
       <h1 className="font-display text-3xl font-semibold text-brand-primary mb-10">
         Categorias
       </h1>
-      <div className="max-w-2xl">
-        <CategoriaList inicialCategorias={categorias} />
-      </div>
+      <CategoriaList inicialCategorias={categorias} />
     </div>
   )
 }
