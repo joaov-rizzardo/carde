@@ -10,7 +10,7 @@ interface MenuItemCardProps {
 
 export function MenuItemCard({ item }: MenuItemCardProps) {
   return (
-    <div className="flex bg-brand-surface border border-brand-border rounded-xl overflow-hidden">
+    <div className="flex items-center bg-brand-surface border border-brand-border rounded-xl overflow-hidden">
       <div className="relative w-24 h-24 flex-shrink-0 bg-brand-warm">
         {item.fotoUrl ? (
           <Image
