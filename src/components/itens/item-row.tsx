@@ -1,7 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import { Star, Pencil, Trash2 } from 'lucide-react'
+import Image from 'next/image'
+import { Star, Pencil, Trash2, UtensilsCrossed } from 'lucide-react'
 import { Switch } from '@/components/ui/switch'
 import type { ItemDto } from '@/types/item'
 
@@ -35,6 +36,22 @@ export function ItemRow({ item, onToggleDisponibilidade, onEdit, onDelete }: Ite
 
       <div className="flex-1 min-w-0">
         <div className="flex items-center min-h-[76px] py-2.5 pl-3 pr-1.5 gap-2">
+          <div className="relative w-12 h-12 flex-shrink-0 rounded-lg overflow-hidden bg-brand-warm">
+            {item.fotoUrl ? (
+              <Image
+                src={item.fotoUrl}
+                alt={item.nome}
+                fill
+                sizes="48px"
+                className="object-cover"
+              />
+            ) : (
+              <div className="flex items-center justify-center w-full h-full">
+                <UtensilsCrossed className="w-4 h-4 text-brand-muted" aria-hidden="true" />
+              </div>
+            )}
+          </div>
+
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-1.5">
               {item.destaque && (

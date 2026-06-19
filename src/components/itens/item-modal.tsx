@@ -12,6 +12,7 @@ import {
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select'
 import { Switch } from '@/components/ui/switch'
 import { Textarea } from '@/components/ui/textarea'
+import { ImageUpload } from './image-upload'
 import type { ItemDto } from '@/types/item'
 
 interface CategoriaOpcao {
@@ -20,11 +21,13 @@ interface CategoriaOpcao {
 }
 
 export interface ItemFormPayload {
+  id?: string
   nome: string
   preco: number
   descricao?: string
   categoriaId: string
   destaque?: boolean
+  fotoUrl?: string | null
 }
 
 interface ItemModalProps {
@@ -49,6 +52,8 @@ export function ItemModal({ open, onOpenChange, categorias, itemEmEdicao, onSalv
   const [form, setForm] = useState<FormState>(ESTADO_VAZIO)
   const [erros, setErros] = useState<Partial<Record<keyof FormState, string>>>({})
   const [salvando, setSalvando] = useState(false)
+  const [fotoUrl, setFotoUrl] = useState<string | null>(null)
+  const [pendingId, setPendingId] = useState('')
   const nomeInputRef = useRef<HTMLInputElement>(null)
   const modoEdicao = !!itemEmEdicao
 
@@ -66,10 +71,14 @@ export function ItemModal({ open, onOpenChange, categorias, itemEmEdicao, onSalv
           : { ...ESTADO_VAZIO, categoriaId: categorias[0]?.id ?? '' },
       )
       setErros({})
+      setFotoUrl(itemEmEdicao?.fotoUrl ?? null)
+      if (!itemEmEdicao) setPendingId(crypto.randomUUID())
       const timer = setTimeout(() => nomeInputRef.current?.focus(), 80)
       return () => clearTimeout(timer)
     }
   }, [open, itemEmEdicao, categorias])
+
+  const itemId = itemEmEdicao?.id ?? pendingId
 
   function atualizarCampo<K extends keyof FormState>(campo: K, valor: FormState[K]) {
     setForm((prev) => ({ ...prev, [campo]: valor }))
@@ -103,11 +112,13 @@ export function ItemModal({ open, onOpenChange, categorias, itemEmEdicao, onSalv
 
     setSalvando(true)
     const sucesso = await onSalvar({
+      ...(modoEdicao ? {} : { id: pendingId }),
       nome: form.nome.trim(),
       preco: Number(form.preco),
       descricao: form.descricao.trim() || undefined,
       categoriaId: form.categoriaId,
       destaque: form.destaque,
+      fotoUrl,
     })
     setSalvando(false)
     if (sucesso) onOpenChange(false)
@@ -125,6 +136,17 @@ export function ItemModal({ open, onOpenChange, categorias, itemEmEdicao, onSalv
         </DialogHeader>
 
         <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4">
+          <div className="flex flex-col gap-1.5">
+            <span className="text-sm font-medium text-brand-primary">
+              Foto <span className="text-brand-muted font-normal">(opcional)</span>
+            </span>
+            <ImageUpload
+              itemId={itemId}
+              fotoUrlInicial={itemEmEdicao?.fotoUrl ?? null}
+              onChange={setFotoUrl}
+            />
+          </div>
+
           <div className="flex flex-col gap-1.5">
             <label htmlFor="item-nome-input" className="text-sm font-medium text-brand-primary">
               Nome do item

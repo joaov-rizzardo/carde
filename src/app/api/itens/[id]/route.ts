@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { z } from 'zod'
 import { obterRestauranteDaSessao } from '@/lib/auth/ownership'
 import { prisma } from '@/lib/prisma'
+import { removerFoto } from '@/lib/supabase/storage'
 import { erro, ok, type ApiResponse } from '@/types/api'
 import type { ItemDto } from '@/types/item'
 
@@ -11,6 +12,7 @@ const itemSchema = z.object({
   descricao: z.string().max(500, 'Descrição deve ter no máximo 500 caracteres').optional(),
   categoriaId: z.string().min(1, 'Categoria é obrigatória'),
   destaque: z.boolean().optional(),
+  fotoUrl: z.string().url().nullable().optional(),
 })
 
 const itemSelect = {
@@ -60,7 +62,7 @@ export async function PUT(
 
   const item = await prisma.item.findUnique({
     where: { id },
-    select: { categoriaId: true, categoria: { select: { restauranteId: true } } },
+    select: { categoriaId: true, fotoUrl: true, categoria: { select: { restauranteId: true } } },
   })
 
   if (!item) {
@@ -102,9 +104,18 @@ export async function PUT(
         categoriaId: parsed.data.categoriaId,
         destaque: parsed.data.destaque ?? false,
         ...(ordem !== undefined ? { ordem } : {}),
+        ...(parsed.data.fotoUrl !== undefined ? { fotoUrl: parsed.data.fotoUrl } : {}),
       },
       select: itemSelect,
     })
+
+    if (
+      parsed.data.fotoUrl !== undefined &&
+      item.fotoUrl &&
+      parsed.data.fotoUrl !== item.fotoUrl
+    ) {
+      removerFoto(item.fotoUrl).catch((e) => console.error('Falha ao remover foto anterior:', e))
+    }
 
     const dados: ItemDto = { ...atualizado, preco: atualizado.preco.toString() }
     return NextResponse.json(ok(dados))
@@ -129,7 +140,7 @@ export async function DELETE(
 
   const item = await prisma.item.findUnique({
     where: { id },
-    select: { categoria: { select: { restauranteId: true } } },
+    select: { fotoUrl: true, categoria: { select: { restauranteId: true } } },
   })
 
   if (!item) {
@@ -141,6 +152,9 @@ export async function DELETE(
 
   try {
     await prisma.item.delete({ where: { id } })
+    if (item.fotoUrl) {
+      removerFoto(item.fotoUrl).catch((e) => console.error('Falha ao remover foto do item excluído:', e))
+    }
     return NextResponse.json(ok({ id }))
   } catch {
     return NextResponse.json(erro('Erro interno do servidor'), { status: 500 })

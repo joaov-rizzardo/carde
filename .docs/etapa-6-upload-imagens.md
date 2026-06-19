@@ -11,6 +11,8 @@ Funcionalidade de upload de foto para cada item do cardápio. Imagem comprimida 
 - Botão de remover imagem existente
 - Endpoint de upload com validação de tipo e tamanho
 - Remoção automática da imagem anterior ao substituir
+- Possibilidade de subir a imagem no cadastro/edição do produto
+- Definir escala padrão da imagem
 
 ---
 

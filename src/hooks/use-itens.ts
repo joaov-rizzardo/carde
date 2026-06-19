@@ -6,11 +6,13 @@ import type { CategoriaComItensDto, ItemDto } from '@/types/item'
 type ToastFn = (msg: string) => void
 
 interface ItemPayload {
+  id?: string
   nome: string
   preco: number
   descricao?: string
   categoriaId: string
   destaque?: boolean
+  fotoUrl?: string | null
 }
 
 export function useItens(inicial: CategoriaComItensDto[], onErro: ToastFn) {

@@ -6,11 +6,13 @@ import { erro, ok, type ApiResponse } from '@/types/api'
 import type { CategoriaComItensDto, ItemDto } from '@/types/item'
 
 const itemSchema = z.object({
+  id: z.string().min(1).optional(),
   nome: z.string().min(1, 'Nome é obrigatório').max(80, 'Nome deve ter no máximo 80 caracteres'),
   preco: z.coerce.number().positive('Preço deve ser maior que zero'),
   descricao: z.string().max(500, 'Descrição deve ter no máximo 500 caracteres').optional(),
   categoriaId: z.string().min(1, 'Categoria é obrigatória'),
   destaque: z.boolean().optional(),
+  fotoUrl: z.string().url().nullable().optional(),
 })
 
 const itemSelect = {
@@ -105,9 +107,11 @@ export async function POST(request: Request): Promise<NextResponse<ApiResponse<I
 
     const item = await prisma.item.create({
       data: {
+        ...(parsed.data.id ? { id: parsed.data.id } : {}),
         nome: parsed.data.nome,
         preco: arredondarPreco(parsed.data.preco),
         descricao: parsed.data.descricao ?? null,
+        fotoUrl: parsed.data.fotoUrl ?? null,
         categoriaId: parsed.data.categoriaId,
         destaque: parsed.data.destaque ?? false,
         disponivel: true,
