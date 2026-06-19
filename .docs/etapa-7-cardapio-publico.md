@@ -11,6 +11,7 @@ Página pública do cardápio — o que o cliente final vê ao escanear o QR cod
 - Cards de item com foto, nome, descrição e preço
 - Layout responsivo otimizado para mobile
 - 404 para slug inválido ou restaurante inativo
+- Deve ser uma página bonita e visualmente agradável
 
 ---
 
