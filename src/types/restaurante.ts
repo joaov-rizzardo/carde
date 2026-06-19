@@ -6,7 +6,9 @@ export type RestauranteDto = {
   id: string
   slug: string
   nome: string
+  descricao: string | null
   corPrimaria: string
+  logoUrl: string | null
   ativo: boolean
   criadoEm: string // ISO 8601
 }

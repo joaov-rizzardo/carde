@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import { z } from 'zod'
 import { obterRestauranteDaSessao } from '@/lib/auth/ownership'
 import { prisma } from '@/lib/prisma'
-import { removerFoto } from '@/lib/supabase/storage'
+import { BUCKET_FOTOS_ITENS, removerArquivo } from '@/lib/supabase/storage'
 import { erro, ok, type ApiResponse } from '@/types/api'
 import type { ItemDto } from '@/types/item'
 
@@ -114,7 +114,9 @@ export async function PUT(
       item.fotoUrl &&
       parsed.data.fotoUrl !== item.fotoUrl
     ) {
-      removerFoto(item.fotoUrl).catch((e) => console.error('Falha ao remover foto anterior:', e))
+      removerArquivo(BUCKET_FOTOS_ITENS, item.fotoUrl).catch((e) =>
+        console.error('Falha ao remover foto anterior:', e),
+      )
     }
 
     const dados: ItemDto = { ...atualizado, preco: atualizado.preco.toString() }
@@ -153,7 +155,9 @@ export async function DELETE(
   try {
     await prisma.item.delete({ where: { id } })
     if (item.fotoUrl) {
-      removerFoto(item.fotoUrl).catch((e) => console.error('Falha ao remover foto do item excluído:', e))
+      removerArquivo(BUCKET_FOTOS_ITENS, item.fotoUrl).catch((e) =>
+        console.error('Falha ao remover foto do item excluído:', e),
+      )
     }
     return NextResponse.json(ok({ id }))
   } catch {

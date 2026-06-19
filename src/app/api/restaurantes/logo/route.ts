@@ -1,15 +1,10 @@
 import { NextResponse } from 'next/server'
-import { z } from 'zod'
 import { obterRestauranteDaSessao } from '@/lib/auth/ownership'
-import { BUCKET_FOTOS_ITENS, enviarArquivo } from '@/lib/supabase/storage'
+import { BUCKET_LOGOS_RESTAURANTE, enviarArquivo } from '@/lib/supabase/storage'
 import { erro, ok, type ApiResponse } from '@/types/api'
 
 const TIPOS_ACEITOS = ['image/jpeg', 'image/png', 'image/webp']
 const TAMANHO_MAXIMO = 5 * 1024 * 1024
-
-const uploadSchema = z.object({
-  itemId: z.string().min(1, 'itemId é obrigatório'),
-})
 
 export async function POST(request: Request): Promise<NextResponse<ApiResponse<{ url: string }>>> {
   let restauranteId: string
@@ -28,12 +23,6 @@ export async function POST(request: Request): Promise<NextResponse<ApiResponse<{
   }
 
   const file = formData.get('file')
-  const parsed = uploadSchema.safeParse({ itemId: formData.get('itemId') })
-
-  if (!parsed.success) {
-    const mensagem = parsed.error.issues[0]?.message ?? 'Dados inválidos'
-    return NextResponse.json(erro(mensagem, 'TIPO_INVALIDO'), { status: 400 })
-  }
 
   if (!(file instanceof File)) {
     return NextResponse.json(erro('Arquivo é obrigatório', 'TIPO_INVALIDO'), { status: 400 })
@@ -51,8 +40,8 @@ export async function POST(request: Request): Promise<NextResponse<ApiResponse<{
 
   try {
     const buffer = Buffer.from(await file.arrayBuffer())
-    const path = `${restauranteId}/${parsed.data.itemId}-${Date.now()}.webp`
-    const url = await enviarArquivo(BUCKET_FOTOS_ITENS, buffer, path)
+    const path = `${restauranteId}/logo-${Date.now()}.webp`
+    const url = await enviarArquivo(BUCKET_LOGOS_RESTAURANTE, buffer, path)
     return NextResponse.json(ok({ url }))
   } catch {
     return NextResponse.json(erro('Erro interno do servidor'), { status: 500 })
